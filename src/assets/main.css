@@ -1,0 +1,16 @@
+/* @import 'https://at.alicdn.com/t/c/font_4244591_7w45uu9x6ff.css'; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply h-screen w-screen flex  justify-center items-center box-content;
+  transition: 0.8s all ease;
+}
+
+#app {
+  @apply max-xl:h-screen max-xl:w-screen;
+  @apply xl:h-[90vh] xl:w-[90vw];
+  @apply flex flex-col  shadow-lg shadow-pink-200;
+  @apply bg-green-100;
+}
