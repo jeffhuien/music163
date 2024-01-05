@@ -20,8 +20,9 @@
         <el-avatar class="absolute top-0 left-2 bg-none" shape="square" :size="'large'" :src="songImg" />
       </div>
 
-      <div class="flex shrink-0 flex-1 bars ml-2 flex-col justify-center items-start max-sm:w-[30vw] relative">
-        <RunHouse class="text-sm" :data="data.musicName"></RunHouse>
+      <div
+        class="bg-purple-300 flex shrink-0 flex-1 bars ml-2 flex-col justify-center items-start max-sm:w-[30vw] relative">
+        <RunHouse class="text-sm !w-1/3" :data="data.musicName"></RunHouse>
         <Bars class="text-sm mt-[.5rem] w-full max-sm:!hidden" :data="leftBars"></Bars>
       </div>
     </div>
@@ -57,7 +58,7 @@ let mp3 = new Audio()
 mp3.volume = 1
 
 let status = ref(false) //false暂停
-let timer: NodeJS.Timer
+let timer: undefined | NodeJS.Timeout
 let currentTime = ref(0)
 
 let leftBars = [
