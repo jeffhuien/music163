@@ -1,73 +1,105 @@
 <template>
-  <div class="playBar">
+  <div class="playBar border">
     <!-- 进度条 -->
-    <div class="playBar-progress w-full pb-2 h-[0.2rem] hover:cursor-pointer absolute top-0" @click="jump($event)">
+    <div
+      class="playBar-progress group w-full h-[0.2rem] hover:cursor-pointer absolute -top-[0.07rem] left-0"
+      @click="jump($event)">
       <span
         class="absolute block h-[0.1rem] bg-blue-600"
-        :style="['width:' + (currentTime / mp3.duration) * 100 + '%']"
+        :style="['width:' + (currentTime / mp3.getDuration()) * 100 + '%']"
         id="progress">
       </span>
       <span
-        class="w-2 h-2 rounded absolute -translate-y-1/2 z-10 bg-pink-300"
-        :style="['left:' + (currentTime / mp3.duration) * 100 + '%']"
+        class="w-2 h-2 rounded absolute -translate-y-1/2 -translate-x-1/2 z-10 bg-red-700 !hidden group-hover:!block"
+        :style="['left:' + (currentTime / mp3.getDuration()) * 100 + '%']"
         id="idot"></span>
     </div>
 
-    <div class="shrink-0 flex items-center justify-between w-[30vw]">
-      <div class="play_bg mr-2">
-        <i class="fa-solid fa-angles-up"></i>
-        <!-- <!== 歌曲封面 ==> -->
-        <el-avatar class="absolute top-0 left-2 bg-none" shape="square" :size="'large'" :src="songImg" />
-      </div>
-
-      <div
-        class="bg-purple-300 flex shrink-0 flex-1 bars ml-2 flex-col justify-center items-start max-sm:w-[30vw] relative">
-        <RunHouse class="text-sm !w-1/3" :data="data.musicName"></RunHouse>
-        <Bars class="text-sm mt-[.5rem] w-full max-sm:!hidden" :data="leftBars"></Bars>
+    <div class="play_bg w-full h-full" @click="$router.push('/play')">
+      <i class="fa-solid fa-angles-up left-0"></i>
+      <!-- <!== 歌曲封面 ==> -->
+      <img
+        class="absolute max-sm:animate-spin-slow top-0 w-full h-full object-cover rounded-md max-sm:rounded-full"
+        :src="songImg"
+        :style="[Music.isPlaying() == false ? 'animation-play-state: paused' : '']" />
+    </div>
+    <div class="shrink-0 flex items-center justify-between lg:w-[30vw]">
+      <div class="flex shrink-0 flex-1 bars ml-1 flex-col justify-center items-start max-sm:w-[30vw] relative !w-full">
+        <div class="" v-if="useISMobileStore().isMobile">
+          <songNameMobile :musicName="musicName" :singerName="singerName"></songNameMobile>
+        </div>
+        <div class="" v-else>
+          <RunHouse class="text-sm" :data="musicName"></RunHouse>
+          <Bars class="text-sm mt-[.5rem] w-full max-sm:!hidden" :data="leftBars"></Bars>
+        </div>
       </div>
     </div>
 
     <!-- <!== 控制条 ==> -->
-    <div class="!flex justify-center flex-1 relative">
+    <div class="flex justify-center flex-1 relative lg:w-[30vw] max-sm:!justify-end max-sm:pr-12">
       <div class="flex justify-center items-center gap-8 text-xl">
-        <i class="fa-solid fa-backward-step text-pink-300"></i>
+        <i class="fa-solid fa-backward-step text-pink-300 max-md:hidden"></i>
         <i
-          class="fa-solid text-pink-300 shrink-0 text-4xl w-6"
+          class="fa-solid text-pink-300 shrink-0 text-4xl w-5 max-sm:text-2xl"
           :class="[status ? 'fa-pause' : 'fa-play ']"
           @click="play"></i>
-        <i class="fa-solid fa-forward-step text-pink-300"></i>
-      </div>
-
-      <div class="absolute right-0 top-1/4 mr-4 max-lg:!hidden">
-        <timeText class="text-sm" :CurTime="currentTime" :totalTime="mp3.duration" />
+        <i class="fa-solid fa-forward-step text-pink-300 max-md:hidden"></i>
       </div>
     </div>
 
-    <div class="w-[30vw] flex items-center justify-end">
-      <Bars class="text-sm max-sm:!hidden mr-12" :data="rightBars"></Bars>
-      <Bars class="text-sm sm:hidden mr-6" :data="[rightBars[rightBars.length - 1]]"></Bars>
+    <div class="lg:w-[30vw] items-center justify-end flex">
+      <div class="mr-10 left-0 max-md:!hidden">
+        <timeText class="text-xs opacity-90" :CurTime="currentTime" :totalTime="mp3.getDuration()" />
+      </div>
+      <Bars class="text-sm mr-6 max-md:hidden" :data="rightBars"></Bars>
+      <Bars class="text-sm mr-6 hidden max-md:block" :data="[rightBars[rightBars.length - 1]]"></Bars>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { bars } from '#/types'
+import { bars, musicLocal } from '#/types'
+import { toast } from '@/plugins/toast'
+import { useISMobileStore } from '@/stores/isMobile'
+import playControl from '@/stores/playControl'
+import { Music, store } from '@/utils'
+import { storeToRefs } from 'pinia'
 
-let data = defineProps(['musicName', 'songImg', 'playUrl'])
-let mp3 = new Audio()
-mp3.volume = 1
+let cache = store.get('mp3') as musicLocal
+playControl().playUrl = cache.playUrl
+playControl().songImg = cache.songImg
+playControl().musicName = cache.musicName
+playControl().singerName = cache.singerName
 
-let status = ref(false) //false暂停
+// let data: musicLocal = cache !== undefined ? (cache.playUrl != 'undefined' ? cache : playControl()) : playControl()
+// if (cache !== undefined) {
+//   if (cache.playUrl != 'undefined') {
+//     data = cache as musicLocal
+//     console.log(data)
+//   }
+// }
+
+let { musicName, singerName, songImg, playUrl } = storeToRefs(playControl())
+
+// let mp3 = new Audio()
+let mp3 = Music
+let status = ref(Music.isPlaying()) //false暂停
+
 let timer: undefined | NodeJS.Timeout
 let currentTime = ref(0)
+// data.currentTime = currentTime.value
+mp3.setVolume(playControl().volume / 100)
+// mp3.src = data.playUrl
+// mp3.currentTime = currentTime.value
 
 let leftBars = [
   {
     name: '收藏',
     ico: ['fa-regular fa-heart', 'fa-solid'],
-    fun: function (e: { target: { classList: { toggle: (arg0: string) => void } } }) {
-      e.target.classList.toggle(this.ico[1])
-      console.log(e.target)
+    fun: function (e: Event) {
+      let target = e.target as HTMLElement
+      target.classList.toggle(this.ico[1])
+      target.style.color = '#ff0000'
     },
   },
   {
@@ -78,17 +110,13 @@ let leftBars = [
     name: '下载',
     ico: 'fa-solid fa-download',
   },
-  {
-    name: '分享',
-    ico: 'fa-solid fa-arrow-up-right-from-square',
-  },
 ] as bars[]
 
 let rightBars = [
   {
     name: '音量',
     ico: ['fa-solid fa-volume-high', 'fa-volume-low', 'fa-volume-xmark'], //大中无
-    fun: function (e: { target: { classList: { toggle: (arg0: string) => void } } }) {
+    fun: function (e: Event & { target: HTMLElement }) {
       e.target.classList.toggle(this.ico[2])
       console.log(e.target)
     },
@@ -96,11 +124,7 @@ let rightBars = [
   {
     name: '模式',
     ico: 'fa-solid fa-repeat',
-    fun: function (e: any) {},
-  },
-  {
-    name: '歌词',
-    ico: 'fa-brands fa-amilia',
+    fun: function (e: Event & { target: HTMLElement }) {},
   },
   {
     name: '列表',
@@ -108,47 +132,41 @@ let rightBars = [
   },
 ] as bars[]
 
-watch(
-  () => data.playUrl,
-  (newValue: string, old: string) => {
-    mp3.src = newValue
-  },
-)
-
-document.addEventListener('keyup', (e) => {
+document.addEventListener('keyup', async (e) => {
   if (e.key == ' ') {
-    play()
+    await play()
   }
 })
 /**
  * @description 播放
  */
-function play() {
-  try {
-    if (status.value) {
+async function play() {
+  if (mp3.getSrc().split('/').pop() !== 'undefined') {
+    if (Music.isPlaying()) {
       mp3.pause()
       console.log('暂停了')
       clearInterval(timer)
       status.value = false
     } else {
       status.value = true
-      mp3.play()
-      console.log('开始播放了')
-
+      try {
+        await mp3.play(playUrl.value)
+      } catch (err: ErrorEvent | any) {
+        toast.error(err.toString())
+      }
       timer = setInterval(() => {
-        currentTime.value = mp3.currentTime
-        console.log(currentTime.value)
+        currentTime.value = mp3.getCurrentTime()
       }, 1000)
     }
-  } catch (error) {
-    location.reload()
+  } else {
+    toast.info('没有播放源~')
   }
 }
 
 //播放完成事件
 mp3.addEventListener('ended', () => {
   clearInterval(timer)
-  currentTime.value = mp3.duration
+  currentTime.value = mp3.getDuration()
   let t = document.querySelector('#idot')! as HTMLSpanElement
   t.style.left = 99 + '%'
   status.value = false
@@ -162,7 +180,7 @@ function jump(e: MouseEvent) {
   let dom = e.target as HTMLElement
   try {
     let position = e.offsetX / dom.offsetWidth
-    mp3.currentTime = mp3.duration * position
+    mp3.setCurrentTime(mp3.getDuration() * position)
   } catch (error) {
     location.reload()
   }
@@ -172,7 +190,7 @@ function jump(e: MouseEvent) {
 <style scoped lang="scss">
 .playBar {
   transition: 0.3s all ease;
-  @apply w-full relative flex justify-between py-2 flex-nowrap;
+  @apply w-full relative flex lg:justify-between flex-nowrap p-2;
 
   .playBar-progress {
     #idot {
@@ -198,8 +216,6 @@ function jump(e: MouseEvent) {
       color: #ffffffee;
       font-size: 2rem;
       position: absolute;
-      top: 0;
-      left: 6px;
       width: 100%;
       height: 100%;
     }

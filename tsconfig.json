@@ -15,6 +15,7 @@
       "@/*": ["./src/*"],
       "#/*": ["./types/*"]
     },
+    "types": ["vite/client"],
     "allowJs": true
   },
   "include": [
@@ -26,6 +27,7 @@
     "vite/**/*.ts",
     "mock/**/*.ts",
     "types/**/*.d.ts",
-    "types/**/*.ts"
+    "types/**/*.ts",
+    "types/*.d.ts"
   ]
 }

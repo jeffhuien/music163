@@ -13,11 +13,18 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('@/layout/main/index.vue'),
+      children: [
+        {
+          path: 'b',
+          name: 'b',
+          component: () => import('@/views/main/index.vue'),
+        },
+      ],
     },
     {
-      path: '/main',
-      name: 'main',
-      component: () => import('@/layout/main/index.vue'),
+      path: '/play',
+      name: 'play',
+      component: () => import('@/layout/play/index.vue'),
       children: [
         {
           path: 'b',
@@ -27,6 +34,18 @@ const router = createRouter({
       ],
     },
 
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('@/layout/search/index.vue'),
+      children: [
+        {
+          path: 'b',
+          name: 'b',
+          component: () => import('@/views/main/index.vue'),
+        },
+      ],
+    },
     //测试路由
     ...testRoute,
   ],

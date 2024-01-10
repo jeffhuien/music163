@@ -1,7 +1,3 @@
-<!--
- * @Author: GAO GAO
- * @Date: 2023-09-09 11:55:09
--->
 <script setup lang="ts">
 import { bars } from '#/types'
 

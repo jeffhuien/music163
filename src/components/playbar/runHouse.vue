@@ -3,8 +3,8 @@
  * @Date: 2023-10-06 14:58:01
 -->
 <template>
-  <Vue3Marquee :pause="scroll">
-    <span ref="aa">
+  <Vue3Marquee :pause="scroll" :pause-on-hover="true" :pause-on-click="true">
+    <span ref="S_text">
       {{ data.data }}
     </span>
   </Vue3Marquee>
@@ -12,17 +12,20 @@
 
 <script setup>
 let data = defineProps(['data'])
-let aa = ref(null)
-let scroll = ref(true)
+let S_text = ref(null)
+let scroll = ref(false) //false 表示滚动，true 表示不滚动
 
-function resize(aa) {
-  if (aa.value.clientWidth > aa.value.parentNode.clientWidth) scroll.value = true
-  else scroll.value = false
-  console.log(scroll.value)
+/**
+ *
+ * @param {*} S_text 需要滚动的文字
+ */
+function resize(S_text) {
+  let [a, b] = [S_text.value.clientWidth, S_text.value.parentNode.clientWidth]
+  if (a >= b) scroll.value = false
+  else scroll.value = true
 }
 onMounted(async () => {
   await nextTick()
-  resize(aa)
-  addEventListener('resize', resize(aa))
+  addEventListener('resize', resize(S_text))
 })
 </script>

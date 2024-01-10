@@ -7,21 +7,18 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Back: typeof import('./../src/components/top/back.vue')['default']
     Bars: typeof import('./../src/components/playbar/bars.vue')['default']
-    ElAvatar: typeof import('element-plus/es')['ElAvatar']
-    ElButton: typeof import('element-plus/es')['ElButton']
-    ElCard: typeof import('element-plus/es')['ElCard']
-    ElCarousel: typeof import('element-plus/es')['ElCarousel']
-    ElCarouselItem: typeof import('element-plus/es')['ElCarouselItem']
-    ElCol: typeof import('element-plus/es')['ElCol']
-    ElProgress: typeof import('element-plus/es')['ElProgress']
-    ElRow: typeof import('element-plus/es')['ElRow']
-    Gaogao: typeof import('./../src/components/gaogao.vue')['default']
-    Playbar: typeof import('./../src/components/playbar/index.vue')['default']
+    Loading: typeof import('./../src/components/loading.vue')['default']
+    Logo: typeof import('./../src/components/top/logo.vue')['default']
+    MSearch: typeof import('./../src/components/top/search/mSearch.vue')['default']
     PlayBar: typeof import('./../src/components/playbar/playBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     RunHouse: typeof import('./../src/components/playbar/runHouse.vue')['default']
+    Search: typeof import('./../src/components/top/search/index.vue')['default']
+    SongNameMobile: typeof import('./../src/components/playbar/songNameMobile.vue')['default']
     TimeText: typeof import('./../src/components/playbar/timeText.vue')['default']
+    Top: typeof import('./../src/components/top/index.vue')['default']
   }
 }
