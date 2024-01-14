@@ -1,31 +1,27 @@
 <script setup lang="ts">
-import { SearchSongs } from '#/search/searchSongs'
 import { searchSuggest } from '#/search/searchSuggest'
 import { SearchApi } from '@/Api/search'
-import { toast } from '@/plugins/toast'
-import loadingStore from '@/stores/loading'
-let set = inject('setData') as Function
+import router from '@/router'
+import { loading, searchHistory } from '@/stores'
 
+let v = inject('kw', ref<string>())
 let keyword = ref('')
 let data = ref<searchSuggest>()
 let show = ref(false)
 async function search(keywords: string) {
-  if (keywords.trim() == '') {
-    toast.error('请输入关键字！')
-    keyword.value = ''
-    return false
-  }
   show.value = !show.value
   data.value = await SearchApi.Suggest(keywords)
-
-  if (!data.value.result.albums) {
-    toast.error('未搜索到歌曲~')
-  }
 }
+let currentRoute = useRouter().currentRoute.value
 
-async function enterSearch() {
-  let searchData = await SearchApi.SearchSongs(keyword.value)
-  set(searchData)
+async function enterSearch(keywords: string) {
+  searchHistory().add(keywords)
+  if (currentRoute.name !== 'search') {
+    v.value = keywords
+    router.push(`/search?keywords=${keywords}`)
+    return
+  }
+  v.value = keywords
 }
 
 async function getFocus() {
@@ -41,11 +37,10 @@ function lostFocus() {
   }, 300)
 }
 
-let currentRoute = useRouter().currentRoute.value
-
 let ls = await SearchApi.Hot()
-let ls1 = `都忘记，哦对hi，哦擦是你，哦那我产，品的开，完票`.split('，')
+
 //TODO 搜索建议关键词匹配
+//TODO 搜索无建议时央视
 </script>
 
 <template>
@@ -59,53 +54,52 @@ let ls1 = `都忘记，哦对hi，哦擦是你，哦那我产，品的开，完�
       @keyup.stop=""
       @focus="getFocus"
       @blur="lostFocus"
-      @keyup.enter="enterSearch" />
+      @keyup.enter="enterSearch(keyword)" />
     <div
       v-show="show"
-      class="suggest overflow-hidden absolute top-[120%] text-sm w-72 min-h-52 bg-white rounded-md shadow-lg"
-      style="min-height: 13rem">
-      <div
-        style="min-height: 13rem"
-        class="w-full h-full flex justify-center items-center"
-        v-if="loadingStore().searchBoxLoading">
+      class="suggest min-h-[13rem] flex overflow-hidden absolute top-[120%] text-sm w-72 bg-white rounded-md shadow-lg">
+      <div class="w-full h-full flex justify-center items-center" v-if="loading().searchBoxLoading">
         <Loading class="">loading...</Loading>
       </div>
 
-      <div class="" v-else>
-        <div v-if="data?.result" class="flex flex-col gap-2 p-2 h-full border bg-white">
-          <div class="">
+      <template class="w-full" v-else>
+        <div v-if="data?.result" class="h-full w-full">
+          <div v-if="data.result.albums" class="flex flex-col gap-2 p-2 h-full border bg-white">
             <div class="flex p-1 border-b">
               <h2 class="self-center w-2/12 flex-shrink-0 text-gray-500 text-center">单曲</h2>
               <div class="flex-1 w-10/12">
                 <div class="flex gap-2 flex-wrap text-sm" v-for="(item, index) in data.result.songs" :index="index">
-                  <p class="py-2 w-full hover:bg-gray-100 pl-2 truncate" @click="enterSearch">
+                  <p class="py-2 w-full hover:bg-gray-100 pl-2 truncate" @click="enterSearch(item.name)">
                     {{ item.name }} - {{ item.artists.map((i) => i.name).join('、') }}
                   </p>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="flex p-1 border-b">
-            <h2 class="self-center w-2/12 text-gray-500 text-center">专辑</h2>
-            <div class="flex-1 w-10/12">
-              <div class="flex gap-2 flex-wrap text-sm" v-for="(item, index) in data.result.albums" :index="index">
-                <p class="py-2 w-full hover:bg-gray-100 pl-2 truncate" @click="enterSearch">
-                  {{ item.name }} - {{ item.artist.name }}
-                </p>
+            <div class="flex p-1 border-b">
+              <h2 class="self-center w-2/12 text-gray-500 text-center">专辑</h2>
+              <div class="flex-1 w-10/12">
+                <div class="flex gap-2 flex-wrap text-sm" v-for="(item, index) in data.result.albums" :index="index">
+                  <p class="py-2 w-full hover:bg-gray-100 pl-2 truncate" @click="enterSearch(item.name)">
+                    {{ item.name }} - {{ item.artist.name }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
+          <template v-else>
+            <div class="h-full border-none justify-center items-center flex">没有搜到歌曲哦~</div>
+          </template>
         </div>
-        <div v-else class="">
+        <div v-else class="w-full">
           <div class="[&_h2]:mb-2 suggest flex flex-col gap-2 p-2 !min-h-52 border bg-white rounded-md shadow-lg">
             <div class="">
               <h2 class="">搜索历史</h2>
               <div class="flex gap-2 flex-wrap">
                 <span
-                  v-for="i in ls1"
-                  @click="enterSearch"
+                  v-for="i in searchHistory().searchHistory"
+                  @click="enterSearch(i)"
                   class="text-xs border border-sky-500 bg-white px-3 py-1 rounded-2xl">
-                  {{ i }} <i class="fa-solid fa-xmark opacity-60"></i>
+                  {{ i }} <i @click.stop="searchHistory().remove(i)" class="fa-solid fa-xmark opacity-60"></i>
                 </span>
               </div>
             </div>
@@ -120,14 +114,14 @@ let ls1 = `都忘记，哦对hi，哦擦是你，哦那我产，品的开，完�
                   class="text-xs hover:bg-gray-100 px-2 py-1 rounded-2xl"
                   v-for="(i, index) in ls.result.hots"
                   :index="index"
-                  @click="enterSearch">
+                  @click="enterSearch(i.first)">
                   {{ i.first }}
                 </li>
               </ul>
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>

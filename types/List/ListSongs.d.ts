@@ -1,16 +1,52 @@
-/**
- * searchRes
- */
-export interface SearchRes {
+export interface ListSongs {
   code: number
-  result: Result
+  privileges: Privilege[]
+  songs: Song[]
   [property: string]: any
 }
 
-export interface Result {
-  searchQcReminder: null
-  songCount: number
-  songs: Song[]
+export interface Privilege {
+  chargeInfoList: ChargeInfoList[]
+  cp: number
+  cs: boolean
+  dl: number
+  dlLevel: string
+  downloadMaxbr: number
+  downloadMaxBrLevel: string
+  fee: number
+  fl: number
+  flag: number
+  flLevel: string
+  freeTrialPrivilege: FreeTrialPrivilege
+  id: number
+  maxbr: number
+  maxBrLevel: string
+  payed: number
+  pl: number
+  playMaxbr: number
+  playMaxBrLevel: string
+  plLevel: string
+  preSell: boolean
+  rscl: null
+  sp: number
+  st: number
+  subp: number
+  toast: boolean
+  [property: string]: any
+}
+
+export interface ChargeInfoList {
+  chargeMessage: null
+  chargeType: number
+  chargeUrl: null
+  rate: number
+  [property: string]: any
+}
+
+export interface FreeTrialPrivilege {
+  listenType: null
+  resConsumable: boolean
+  userConsumable: boolean
   [property: string]: any
 }
 
@@ -19,6 +55,7 @@ export interface Song {
   al: Al
   alia: string[]
   ar: Ar[]
+  awardTags: null
   cd: string
   cf: string
   copyright: number
@@ -27,14 +64,6 @@ export interface Song {
   djId: number
   dt: number
   entertainmentTags: null
-  /**
-   * enum,
-   * 0: 免费或无版权
-   * 1: VIP 歌曲
-   * 4: 购买专辑
-   * 8: 非会员可免费播放低音质，会员可播放高音质及下载
-   * fee 为 1 或 8 的歌曲均可单独购买 2 元单曲
-   */
   fee: number
   ftype: number
   h: H
@@ -47,11 +76,10 @@ export interface Song {
   mv: number
   name: string
   no: number
-  noCopyrightRcmd: null
+  noCopyrightRcmd: NoCopyrightRcmd
   originCoverType: number
   originSongSimpleData: null | OriginSongSimpleData
   pop: number
-  privilege: Privilege
   pst: number
   publishTime: number
   resourceState: boolean
@@ -84,7 +112,6 @@ export interface Al {
 }
 
 export interface Ar {
-  alia: string[]
   alias: string[]
   id: number
   name: string
@@ -128,6 +155,15 @@ export interface M {
   [property: string]: any
 }
 
+export interface NoCopyrightRcmd {
+  expInfo: null
+  songId: null | string
+  thirdPartySong: null
+  type: number
+  typeDesc: string
+  [property: string]: any
+}
+
 export interface OriginSongSimpleData {
   albumMeta: AlbumMeta
   artists: Artist[]
@@ -145,53 +181,6 @@ export interface AlbumMeta {
 export interface Artist {
   id: number
   name: string
-  [property: string]: any
-}
-
-export interface Privilege {
-  chargeInfoList: ChargeInfoList[]
-  cp: number
-  cs: boolean
-  dl: number
-  dlLevel: string
-  downloadMaxbr: number
-  downloadMaxBrLevel: string
-  fee: number
-  fl: number
-  flag: number
-  flLevel: string
-  freeTrialPrivilege: FreeTrialPrivilege
-  id: number
-  maxbr: number
-  maxBrLevel: string
-  payed: number
-  pl: number
-  playMaxbr: number
-  playMaxBrLevel: string
-  plLevel: string
-  preSell: boolean
-  rightSource: number
-  rscl: null
-  sp: number
-  st: number
-  subp: number
-  toast: boolean
-  [property: string]: any
-}
-
-export interface ChargeInfoList {
-  chargeMessage: null
-  chargeType: number
-  chargeUrl: null
-  rate: number
-  [property: string]: any
-}
-
-export interface FreeTrialPrivilege {
-  cannotListenReason: number
-  listenType: number
-  resConsumable: boolean
-  userConsumable: boolean
   [property: string]: any
 }
 

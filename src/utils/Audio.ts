@@ -1,20 +1,24 @@
-class Music {
-  private audio: HTMLAudioElement
+import { playControl } from '@/stores'
 
+class Music {
+  public audio: HTMLAudioElement
   constructor() {
     this.audio = new Audio()
   }
 
   async play(url: string): Promise<void> {
-    if (this.audio.src === url) this.audio.play()
-    else {
+    if (this.audio.src === url) {
+      this.audio.play()
+    } else {
       this.audio.src = url
       await this.audio.play()
     }
+    playControl().isPlay = true
   }
 
   pause(): void {
     this.audio.pause()
+    playControl().isPlay = false
   }
 
   stop(): void {

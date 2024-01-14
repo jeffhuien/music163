@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="flex justify-center items-center gap-3 mr-3">
+  <div class="flex justify-center items-center gap-3 mr-3" @click="$router.push('/')">
     <svg
       t="1704910324037"
       class="icon w-7 h-7 animate-spin-slow"

@@ -1,5 +1,5 @@
 <template>
-  <div class="playBar border">
+  <div class="playBar">
     <!-- 进度条 -->
     <div
       class="playBar-progress group w-full h-[0.2rem] hover:cursor-pointer absolute -top-[0.07rem] left-0"
@@ -21,7 +21,7 @@
       <img
         class="absolute max-sm:animate-spin-slow top-0 w-full h-full object-cover rounded-md max-sm:rounded-full"
         :src="songImg"
-        :style="[Music.isPlaying() == false ? 'animation-play-state: paused' : '']" />
+        :style="[isPlay == false ? 'animation-play-state: paused' : '']" />
     </div>
     <div class="shrink-0 flex items-center justify-between lg:w-[30vw]">
       <div class="flex shrink-0 flex-1 bars ml-1 flex-col justify-center items-start max-sm:w-[30vw] relative !w-full">
@@ -41,7 +41,7 @@
         <i class="fa-solid fa-backward-step text-pink-300 max-md:hidden"></i>
         <i
           class="fa-solid text-pink-300 shrink-0 text-4xl w-5 max-sm:text-2xl"
-          :class="[status ? 'fa-pause' : 'fa-play ']"
+          :class="[isPlay ? 'fa-pause' : 'fa-play ']"
           @click="play"></i>
         <i class="fa-solid fa-forward-step text-pink-300 max-md:hidden"></i>
       </div>
@@ -58,39 +58,17 @@
 </template>
 
 <script lang="ts" setup>
-import { bars, musicLocal } from '#/types'
+import { bars } from '#/types'
 import { toast } from '@/plugins/toast'
-import { useISMobileStore } from '@/stores/isMobile'
-import playControl from '@/stores/playControl'
-import { Music, store } from '@/utils'
+import { playControl, useISMobileStore } from '@/stores'
+import { Music, loadMusic } from '@/utils'
 import { storeToRefs } from 'pinia'
 
-let cache = store.get('mp3') as musicLocal
-playControl().playUrl = cache.playUrl
-playControl().songImg = cache.songImg
-playControl().musicName = cache.musicName
-playControl().singerName = cache.singerName
+// loadMusic()
+let { musicName, singerName, songImg, playUrl, currentTime, isPlay } = storeToRefs(playControl())
 
-// let data: musicLocal = cache !== undefined ? (cache.playUrl != 'undefined' ? cache : playControl()) : playControl()
-// if (cache !== undefined) {
-//   if (cache.playUrl != 'undefined') {
-//     data = cache as musicLocal
-//     console.log(data)
-//   }
-// }
-
-let { musicName, singerName, songImg, playUrl } = storeToRefs(playControl())
-
-// let mp3 = new Audio()
 let mp3 = Music
-let status = ref(Music.isPlaying()) //false暂停
-
 let timer: undefined | NodeJS.Timeout
-let currentTime = ref(0)
-// data.currentTime = currentTime.value
-mp3.setVolume(playControl().volume / 100)
-// mp3.src = data.playUrl
-// mp3.currentTime = currentTime.value
 
 let leftBars = [
   {
@@ -132,45 +110,37 @@ let rightBars = [
   },
 ] as bars[]
 
-document.addEventListener('keyup', async (e) => {
-  if (e.key == ' ') {
-    await play()
-  }
-})
+// document.addEventListener('keyup', async (e) => {
+//   if (e.key == ' ') {
+//     await play()
+//   }
+// })
 /**
  * @description 播放
  */
+
 async function play() {
-  if (mp3.getSrc().split('/').pop() !== 'undefined') {
-    if (Music.isPlaying()) {
-      mp3.pause()
-      console.log('暂停了')
-      clearInterval(timer)
-      status.value = false
-    } else {
-      status.value = true
-      try {
-        await mp3.play(playUrl.value)
-      } catch (err: ErrorEvent | any) {
-        toast.error(err.toString())
-      }
-      timer = setInterval(() => {
-        currentTime.value = mp3.getCurrentTime()
-      }, 1000)
-    }
+  if (isPlay.value == true) {
+    mp3.pause()
+    console.log('暂停了')
+    clearInterval(timer)
   } else {
-    toast.info('没有播放源~')
+    try {
+      await mp3.play(playUrl.value)
+    } catch (err: ErrorEvent | any) {
+      toast.error(err.toString())
+    }
+    timer = setInterval(() => {
+      currentTime.value = mp3.getCurrentTime()
+    }, 1000)
   }
 }
-
 //播放完成事件
-mp3.addEventListener('ended', () => {
-  clearInterval(timer)
-  currentTime.value = mp3.getDuration()
-  let t = document.querySelector('#idot')! as HTMLSpanElement
-  t.style.left = 99 + '%'
-  status.value = false
-})
+// mp3.addEventListener('ended', () => {
+//   clearInterval(timer)
+//   toast.info('播放完成')
+//   isPlay.value = false
+// })
 
 /**
  * 跳转播放
@@ -178,12 +148,12 @@ mp3.addEventListener('ended', () => {
  */
 function jump(e: MouseEvent) {
   let dom = e.target as HTMLElement
-  try {
-    let position = e.offsetX / dom.offsetWidth
-    mp3.setCurrentTime(mp3.getDuration() * position)
-  } catch (error) {
-    location.reload()
-  }
+  //   try {
+  //     let position = e.offsetX / dom.offsetWidth
+  //     mp3.setCurrentTime(mp3.getDuration() * position)
+  //   } catch (error) {
+  //     location.reload()
+  //   }
 }
 </script>
 

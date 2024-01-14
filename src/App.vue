@@ -1,11 +1,11 @@
 <template>
   <suspense>
     <router-view v-slot="{ Component }">
-      <keep-alive>
-        <transition appear enter-active-class="animate__animated animate__slideInRight">
+      <transition appear enter-active-class="animate__animated animate__slideInRight">
+        <keep-alive>
           <component :is="Component" />
-        </transition>
-      </keep-alive>
+        </keep-alive>
+      </transition>
     </router-view>
   </suspense>
 </template>
@@ -13,8 +13,8 @@
 <style lang="scss" scoped></style>
 
 <script setup lang="ts">
-import { playControl } from './stores'
-import { store } from './utils'
+import { playControl, searchHistory, queryUserList } from './stores'
+import { loadMusic, loadQueryUserList, loadSearchHistory, store } from './utils'
 watch(
   playControl,
   (playControl) => {
@@ -25,4 +25,25 @@ watch(
   },
   { deep: true },
 )
+watch(
+  searchHistory,
+  (newVal) => {
+    if (newVal.searchHistory.length !== 0) store.set('searchHistory', JSON.stringify(newVal.searchHistory))
+  },
+  { deep: true },
+)
+watch(
+  queryUserList,
+  (newVal) => {
+    if (newVal.userList.length !== 0) store.set('queryUserList', JSON.stringify(newVal.userList))
+  },
+  { deep: true },
+)
+
+onMounted(() => {
+  console.log('加载缓存...')
+  loadMusic()
+  loadSearchHistory()
+  loadQueryUserList()
+})
 </script>
