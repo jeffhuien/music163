@@ -2,12 +2,11 @@
   "name": "music163",
   "version": "0.0.0",
   "private": true,
+
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
-    "preview": "vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@types/lodash": "^4.14.202",
