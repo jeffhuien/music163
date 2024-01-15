@@ -11,8 +11,16 @@ import parseEnv from './vite/utils'
 export default ({ command, mode }: ConfigEnv) => {
   const root = process.cwd()
   const env = parseEnv(loadEnv(mode, root))
-
+  console.log(env)
+  console.log('Proxy configuration:', {
+    '/api': {
+      target: env.VITE_API_URL,
+      changeOrigin: true,
+      rewrite: (path: string) => path.replace(/^\/api/, ''),
+    },
+  })
   return {
+    base: './',
     plugins: [
       vue(),
       AutoImport({
@@ -29,6 +37,7 @@ export default ({ command, mode }: ConfigEnv) => {
     resolve: {
       alias,
     },
+
     server: {
       host: true,
       proxy: {
