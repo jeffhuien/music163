@@ -61,7 +61,7 @@
 import { bars } from '#/types'
 import { toast } from '@/plugins/toast'
 import { playControl, useISMobileStore } from '@/stores'
-import { Music, loadMusic } from '@/utils'
+import { Music } from '@/utils'
 import { storeToRefs } from 'pinia'
 
 // loadMusic()

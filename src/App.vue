@@ -15,35 +15,38 @@
 <script setup lang="ts">
 import { playControl, searchHistory, queryUserList } from './stores'
 import { loadMusic, loadQueryUserList, loadSearchHistory, store } from './utils'
-watch(
-  playControl,
-  (playControl) => {
-    // 每当状态发生变化时，将整个 state 持久化到本地存储。
-    if (playControl.musicName !== undefined) {
-      store.set('mp3', { ...playControl })
-    }
-  },
-  { deep: true },
-)
-watch(
-  searchHistory,
-  (newVal) => {
-    if (newVal.searchHistory.length !== 0) store.set('searchHistory', JSON.stringify(newVal.searchHistory))
-  },
-  { deep: true },
-)
-watch(
-  queryUserList,
-  (newVal) => {
-    if (newVal.userList.length !== 0) store.set('queryUserList', JSON.stringify(newVal.userList))
-  },
-  { deep: true },
-)
+
+// import _ from 'lodash'
+
+// watch(
+//   playControl,
+//   (newVal) => {
+//     // 每当状态发生变化时，将整个 state 持久化到本地存储。
+//     if (newVal.musicName !== 'undefined') {
+//       store.set(newVal.$id, newVal.$state)
+//     }
+//   },
+//   { deep: true },
+// )
+// watch(
+//   searchHistory,
+//   (newVal) => {
+//     if (newVal.searchHistory.length !== 0) store.set(newVal.$id, newVal.$state)
+//   },
+//   { deep: true },
+// )
+// watch(
+//   queryUserList,
+//   (newVal) => {
+//     if (newVal.userList.length !== 0) store.set(newVal.$id, newVal.$state)
+//   },
+//   { deep: true },
+// )
 
 onMounted(() => {
   console.log('加载缓存...')
-  loadMusic()
-  loadSearchHistory()
-  loadQueryUserList()
+  // loadMusic()
+  // loadSearchHistory()
+  // loadQueryUserList()
 })
 </script>

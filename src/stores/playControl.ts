@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { Music } from '@/utils'
 
 export default defineStore('playControl', () => {
   let volume = ref<number>(100)
@@ -10,5 +11,7 @@ export default defineStore('playControl', () => {
   let songImg = ref<string>('/img/logo.png')
   let playUrl = ref<string>('undefined')
 
-  return { isPlay, volume, singerName, musicName, songImg, playUrl, currentTime }
+  let audio = ref(Music.audio)
+
+  return { isPlay, volume, singerName, musicName, songImg, playUrl, currentTime, audio }
 })

@@ -1,10 +1,7 @@
-import { getDeviceSize, getIsMobile } from './getDeviceSize'
-import store from './store'
-import env from './env'
 import Music from './Audio'
-import { musicLocal } from '#/types'
 import { fee } from './doc'
-import { playControl, queryUserList, searchHistory } from '@/stores'
+import env from './env'
+import store from './store'
 
 /**
  *
@@ -22,36 +19,18 @@ function formatTime(time: number, type: 'ms' | 'min' = 'min') {
     .padStart(2, '0')}`
 }
 
-function loadMusic() {
-  let cache = store.get('mp3') as musicLocal
-  if (!cache) return
-  playControl().playUrl = cache.playUrl
-  playControl().songImg = cache.songImg
-  playControl().musicName = cache.musicName
-  playControl().singerName = cache.singerName
-  playControl().currentTime = cache.currentTime
+//获取设备尺寸
+function getDeviceSize() {
+  const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+  const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  return { width, height }
 }
-function loadSearchHistory() {
-  let cache = store.get('searchHistory')
-  if (!cache) return
-  searchHistory().searchHistory = JSON.parse(cache) as unknown as string[]
-}
-
-function loadQueryUserList() {
-  let cache = store.get('queryUserList')
-  if (!cache) return
-  queryUserList().userList = JSON.parse(cache) as unknown as string[]
+//获取设备尺寸，是移动设备就返回true
+function getIsMobile() {
+  if (getDeviceSize().width < 768) {
+    return true
+  }
+  return false
 }
 
-export {
-  fee,
-  Music,
-  formatTime,
-  env,
-  getDeviceSize,
-  getIsMobile,
-  store,
-  loadMusic,
-  loadSearchHistory,
-  loadQueryUserList,
-}
+export { Music, env, fee, formatTime, getDeviceSize, getIsMobile, store }

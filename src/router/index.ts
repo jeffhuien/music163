@@ -2,12 +2,12 @@
  * @Author: GAO GAO
  * @Date: 2023-09-05 18:11:52
  */
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
 import testRoute from '@/router/test'
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: [
     {
       path: '/',

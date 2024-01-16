@@ -20,7 +20,6 @@ export default ({ command, mode }: ConfigEnv) => {
     },
   })
   return {
-    base: './',
     plugins: [
       vue(),
       AutoImport({
