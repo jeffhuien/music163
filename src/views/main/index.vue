@@ -1,8 +1,3 @@
-<!--
- * @Author: GAO GAO
- * @Date: 2023-09-08 18:33:03
--->
-
 <template>
   <div class="">
     <Suspense>

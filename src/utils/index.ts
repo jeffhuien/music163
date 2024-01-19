@@ -1,7 +1,11 @@
-import Music from './Audio'
+import { Song } from '#/List/ListSongs'
+import { SongApi } from '@/Api/song'
+import { playControl } from '@/stores'
+import { toast } from '@/plugins/toast'
 import { fee } from './doc'
-import env from './env'
+import Music from './Audio'
 import store from './store'
+import env from './env'
 
 /**
  *
@@ -33,4 +37,20 @@ function getIsMobile() {
   return false
 }
 
-export { Music, env, fee, formatTime, getDeviceSize, getIsMobile, store }
+async function playMusic(i: Song) {
+  let url = await SongApi.getSongUrl(i.id)
+  playControl().playUrl = url.data[0].url
+  playControl().songImg = i.al.picUrl
+  playControl().musicName = i.name
+  playControl().singerName = i.ar.map((item) => item.name).join('、')
+  playControl().isPlay = true
+  let a = i.fee.toString()
+  if (fee[a]) {
+    toast.info(fee[a], { duration: 3000 })
+  }
+  await Music.play(playControl().playUrl)
+  playControl().currentTime = 0
+
+  playControl().duration = Music.getDuration()
+}
+export { Music, env, fee, formatTime, getDeviceSize, getIsMobile, store, playMusic }

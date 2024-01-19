@@ -3,8 +3,7 @@ import type { PiniaPluginContext } from 'pinia'
 /** 只有该数组内的状态会被持久化存储 */
 const localStoreId = ['playControl', 'queryUserList', 'searchHistory']
 
-/** 写一个插件，持久化存储pinia的状态 */
-export default function myPlugin({ store }: PiniaPluginContext) {
+export default function piniaPlugin({ store }: PiniaPluginContext) {
   if (localStoreId.includes(store.$id)) {
     store.$subscribe(() => {
       localStorage.setItem(store.$id, JSON.stringify(store.$state))

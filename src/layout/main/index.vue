@@ -73,10 +73,7 @@
         <div class="py-2 mb-5" v-if="queryUserList().userList.length != 0">
           <h2 class="">搜索历史</h2>
           <div class="flex gap-2 flex-wrap">
-            <span
-              v-for="i in queryUserList().userList"
-              @click="get(i)"
-              class="text-xs border border-sky-500 bg-white px-3 py-1 rounded-2xl">
+            <span v-for="i in queryUserList().userList" @click="get(i)" class="text-xs border border-sky-500 bg-white px-3 py-1 rounded-2xl">
               {{ i }}
               <i @click.stop="queryUserList().remove(i)" class="fa-solid fa-xmark opacity-60"></i>
             </span>
@@ -90,34 +87,30 @@
           </div>
         </div>
         <tbody class="overflow-y-scroll flex-1 border border-pink-300">
-          <p
-            class="bg-white p-2 hover:bg-gray-100"
-            v-for="(k, index) in listsSongs?.songs"
-            :index="index"
-            @click="playMusic(k)">
+          <p class="bg-white p-2 hover:bg-gray-100" v-for="(k, index) in listsSongs?.songs" :index="index" @click="playMusic(k)">
             {{ k.name }}
           </p>
         </tbody>
       </table>
     </div>
     <div class="">
-      <playBar class=""></playBar>
+      <playBar />
     </div>
   </div>
 </template>
 <style scoped lang="scss"></style>
 <script setup lang="ts">
-import { ListSongs, Song } from '#/List/ListSongs'
+import { ListSongs } from '#/List/ListSongs'
 import { UserList } from '#/List/userList'
 import { ListApi } from '@/Api/List'
-import { SongApi } from '@/Api/song'
-import { toast } from '@/plugins/toast'
-import { playControl, queryUserList } from '@/stores'
-import { Music, fee } from '@/utils'
+import { queryUserList } from '@/stores'
+import { playMusic } from '@/utils'
 
 let uid = ref()
 let userLists = ref<UserList>()
 let listsSongs = ref<ListSongs>()
+
+provide('songs', listsSongs)
 
 async function get(id: string) {
   userLists.value = await ListApi.getList(id)
@@ -128,17 +121,6 @@ async function getListSongs(id: number) {
   listsSongs.value = await ListApi.getListSongs(id)
 }
 
-async function playMusic(i: Song) {
-  let url = await SongApi.getSongUrl(i.id)
-  playControl().playUrl = url.data[0].url
-  playControl().songImg = i.al.picUrl
-  playControl().musicName = i.name
-  playControl().singerName = i.ar.map((item) => item.name).join('、')
-  playControl().isPlay = true
-  let a = i.fee.toString()
-  if (fee[a]) {
-    toast.info(fee[a], { duration: 3000 })
-  }
-  await Music.play(playControl().playUrl)
-}
+
+
 </script>

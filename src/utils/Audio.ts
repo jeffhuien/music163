@@ -1,7 +1,7 @@
 import { playControl } from '@/stores'
 
 class Music {
-  public audio: HTMLAudioElement
+  private audio: HTMLAudioElement
   constructor() {
     this.audio = new Audio()
   }
@@ -13,6 +13,8 @@ class Music {
       this.audio.src = url
       await this.audio.play()
     }
+    if (playControl().currentTime >= playControl().duration) playControl().currentTime = 0
+    this.setCurrentTime(playControl().currentTime)
     playControl().isPlay = true
   }
 

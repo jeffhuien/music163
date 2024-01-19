@@ -11,7 +11,7 @@ let data = defineProps<{
     <template v-for="(item, index) in data.data" :key="index">
       <button @click="item.fun($event)">
         <i :class="[item.ico instanceof Array ? item.ico[0] : item.ico]"></i>
-        <span class="ml-1">{{ item.name }}</span>
+        <span class="ml-1 sm:hidden">{{ item.name }}</span>
       </button>
     </template>
   </div>
