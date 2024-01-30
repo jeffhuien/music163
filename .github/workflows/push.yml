@@ -43,6 +43,6 @@ jobs:
           # 服务器ip：换成你的服务器IP
           REMOTE_HOST: ${{ secrets.HOST }}
           # 用户
-          REMOTE_USER: ${{ secrets.NAME }}
+          REMOTE_USER: 'root'
           # 目标地址
           TARGET: '/home/gaogao/music163/dist'
