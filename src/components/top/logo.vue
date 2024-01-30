@@ -54,7 +54,7 @@
         p-id="2041"></path>
     </svg>
 
-    <span class="text-sm whitespace-nowrap">音乐小屋！</span>
+    <span class="text-sm whitespace-nowrap max-sm:hidden">音乐小屋！</span>
   </div>
 </template>
 

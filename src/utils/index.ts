@@ -44,6 +44,7 @@ async function playMusic(i: Song) {
   playControl().musicName = i.name
   playControl().singerName = i.ar.map((item) => item.name).join('、')
   playControl().isPlay = true
+  playControl().playId = i.id
   let a = i.fee.toString()
   if (fee[a]) {
     toast.info(fee[a], { duration: 3000 })

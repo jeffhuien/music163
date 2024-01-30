@@ -55,7 +55,6 @@ export interface Song {
   al: Al
   alia: string[]
   ar: Ar[]
-  awardTags: null
   cd: string
   cf: string
   copyright: number

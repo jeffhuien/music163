@@ -9,6 +9,7 @@ export default defineStore('playControl', () => {
   let singerName = ref<string>('')
   let songImg = ref<string>('/img/logo.png')
   let playUrl = ref<string>('undefined')
+  let playId = ref<number>(0)
 
-  return { duration, isPlay, volume, singerName, musicName, songImg, playUrl, currentTime }
+  return { duration, isPlay, volume, singerName, musicName, songImg, playUrl, currentTime, playId }
 })

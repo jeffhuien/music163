@@ -1,3 +1,5 @@
+import { ListSongs } from './List/ListSongs'
+
 export interface bars {
   name: string
   ico: string[] | string
@@ -11,4 +13,8 @@ export interface musicLocal {
   singerName: string
   songImg: string
   playUrl: string
+}
+
+export interface provideData {
+  searchData: ListSongs | undefined
 }

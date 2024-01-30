@@ -1,6 +1,6 @@
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
-import { VueUseComponentsResolver } from 'unplugin-vue-components/resolvers'
+import { VueUseComponentsResolver, ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { ConfigEnv, loadEnv } from 'vite'
 import alias from './vite/alias'
@@ -11,24 +11,16 @@ import parseEnv from './vite/utils'
 export default ({ command, mode }: ConfigEnv) => {
   const root = process.cwd()
   const env = parseEnv(loadEnv(mode, root))
-  console.log(env)
-  console.log('Proxy configuration:', {
-    '/api': {
-      target: env.VITE_API_URL,
-      changeOrigin: true,
-      rewrite: (path: string) => path.replace(/^\/api/, ''),
-    },
-  })
   return {
     plugins: [
       vue(),
       AutoImport({
-        resolvers: [VueUseComponentsResolver()],
+        resolvers: [VueUseComponentsResolver(), ElementPlusResolver()],
         imports: ['vue', 'vue-router'],
         dts: 'types/auto-import.d.ts',
       }),
       Components({
-        // resolvers: [ElementPlusResolver(), VueUseComponentsResolver()],
+        resolvers: [ElementPlusResolver(), VueUseComponentsResolver()],
         extensions: ['vue'],
         dts: 'types/components.d.ts',
       }),

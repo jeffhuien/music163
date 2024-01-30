@@ -1,8 +1,10 @@
 <template>
-  <div class="relative">
+  <div class="absolute">
     <div class="loading"></div>
     <p class="absolute -left-4 top-12">
-      <slot></slot>
+      <span class="text-xs">
+        <slot></slot>
+      </span>
     </p>
   </div>
 </template>

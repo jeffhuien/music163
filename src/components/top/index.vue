@@ -2,7 +2,7 @@
 
 <template>
   <div class="flex w-full p-2">
-    <logo class="w-32 ml-9 max-md:m-0 shrink-0" />
+    <logo class="w-32 ml-9 max-sm:mx-4 max-sm:w-12 shrink-0" />
     <back class="max-md:hidden" />
     <mSearch class="z-20" />
   </div>

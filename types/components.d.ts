@@ -8,17 +8,18 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Back: typeof import('./../src/components/top/back.vue')['default']
-    Bars: typeof import('./../src/components/playbar/bars.vue')['default']
+    Bars: typeof import('./../src/components/playBar/bars.vue')['default']
+    List: typeof import('./../src/components/list/list.vue')['default']
     Loading: typeof import('./../src/components/loading.vue')['default']
     Logo: typeof import('./../src/components/top/logo.vue')['default']
     MSearch: typeof import('./../src/components/top/search/mSearch.vue')['default']
-    PlayBar: typeof import('./../src/components/playbar/playBar.vue')['default']
+    PlayBar: typeof import('./../src/components/playBar/playBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    RunHouse: typeof import('./../src/components/playbar/runHouse.vue')['default']
+    RunHouse: typeof import('./../src/components/playBar/runHouse.vue')['default']
     Search: typeof import('./../src/components/top/search/index.vue')['default']
-    SongNameMobile: typeof import('./../src/components/playbar/songNameMobile.vue')['default']
-    TimeText: typeof import('./../src/components/playbar/timeText.vue')['default']
+    SongNameMobile: typeof import('./../src/components/playBar/songNameMobile.vue')['default']
+    TimeText: typeof import('./../src/components/playBar/timeText.vue')['default']
     Top: typeof import('./../src/components/top/index.vue')['default']
   }
 }
