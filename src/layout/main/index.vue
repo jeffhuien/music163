@@ -53,7 +53,7 @@
     </div>
     <div class="">
       <Suspense>
-        <PlayBar class=""> </PlayBar>
+        <PlayBar class="a"> </PlayBar>
       </Suspense>
     </div>
   </div>
